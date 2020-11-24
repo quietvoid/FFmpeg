@@ -409,7 +409,7 @@ static EbmlSyntax ebml_syntax[3], matroska_segment[9], matroska_track_video_colo
                   matroska_track_combine_planes[2], matroska_track_operation[2], matroska_tracks[2],
                   matroska_attachments[2], matroska_chapter_entry[9], matroska_chapter[6], matroska_chapters[2],
                   matroska_index_entry[3], matroska_index[2], matroska_tag[3], matroska_tags[2], matroska_seekhead[2],
-                  matroska_blockadditions[2], matroska_blockgroup[8], matroska_cluster_parsing[8];
+                  matroska_blockadditions[2], matroska_blockgroup[8], matroska_cluster_parsing[8], matroska_block_addition_mapping[5];
 
 static EbmlSyntax ebml_header[] = {
     { EBML_ID_EBMLREADVERSION,    EBML_UINT, 0, offsetof(Ebml, version),         { .u = EBML_VERSION } },
@@ -561,7 +561,7 @@ static EbmlSyntax matroska_block_addition_mapping[] = {
     { MATROSKA_ID_BLKADDIDNAME,       EBML_STR,  0, offsetof(MatroskaBlockAdditionMapping, name) },
     { MATROSKA_ID_BLKADDIDTYPE,       EBML_UINT, 0, offsetof(MatroskaBlockAdditionMapping, type) },
     { MATROSKA_ID_BLKADDIDEXTRADATA,  EBML_BIN,  0, offsetof(MatroskaBlockAdditionMapping, extradata) },
-    { 0 }
+    CHILD_OF(matroska_track)
 };
 
 static EbmlSyntax matroska_track[] = {
