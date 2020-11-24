@@ -405,7 +405,7 @@ typedef struct MatroskaDemuxContext {
 // incomplete type (6.7.2 in C90, 6.9.2 in C99).
 // Removing the sizes breaks MSVC.
 static EbmlSyntax ebml_syntax[3], matroska_segment[9], matroska_track_video_color[15], matroska_track_video[19],
-                  matroska_track[27], matroska_track_encoding[6], matroska_track_encodings[2],
+                  matroska_track[28], matroska_track_encoding[6], matroska_track_encodings[2],
                   matroska_track_combine_planes[2], matroska_track_operation[2], matroska_tracks[2],
                   matroska_attachments[2], matroska_chapter_entry[9], matroska_chapter[6], matroska_chapters[2],
                   matroska_index_entry[3], matroska_index[2], matroska_tag[3], matroska_tags[2], matroska_seekhead[2],
@@ -582,7 +582,7 @@ static EbmlSyntax matroska_track[] = {
     { MATROSKA_ID_TRACKOPERATION,        EBML_NEST,  0, offsetof(MatroskaTrack, operation),    { .n = matroska_track_operation } },
     { MATROSKA_ID_TRACKCONTENTENCODINGS, EBML_NEST,  0, 0,                                     { .n = matroska_track_encodings } },
     { MATROSKA_ID_TRACKMAXBLKADDID,      EBML_UINT,  0, offsetof(MatroskaTrack, max_block_additional_id) },
-    { MATROSKA_ID_TRACKBLKADDMAPPING,    EBML_NEST,  sizeof(MatroskaBlockAdditionMapping), offsetof(MatroskaTrack, block_addition_mappings), { .n = matroska_block_addition_mapping } },
+    { MATROSKA_ID_TRACKBLKADDMAPPING,    EBML_NEST,  0, offsetof(MatroskaTrack, block_addition_mappings), { .n = matroska_block_addition_mapping } },
     { MATROSKA_ID_SEEKPREROLL,           EBML_UINT,  0, offsetof(MatroskaTrack, seek_preroll) },
     { MATROSKA_ID_TRACKFLAGENABLED,      EBML_NONE },
     { MATROSKA_ID_TRACKFLAGLACING,       EBML_NONE },
