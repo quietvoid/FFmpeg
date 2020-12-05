@@ -20,6 +20,7 @@
  */
 
 #include <stdint.h>
+#include <stdlib.h>
 
 #include "av1.h"
 #include "avc.h"
@@ -1370,6 +1371,10 @@ static int mkv_write_track(AVFormatContext *s, MatroskaMuxContext *mkv,
         if (bit_depth)
             put_ebml_uint(pb, MATROSKA_ID_AUDIOBITDEPTH, bit_depth);
         end_ebml_master(pb, subinfo);
+
+        if ((ret = mkv_write_dovi(s, pb, st)) < 0)
+            return ret;
+
         break;
 
     case AVMEDIA_TYPE_SUBTITLE:
@@ -2306,6 +2311,12 @@ static int mkv_write_packet_internal(AVFormatContext *s, const AVPacket *pkt)
     int ret;
     int64_t ts = track->write_dts ? pkt->dts : pkt->pts;
     int64_t relative_packet_pos;
+
+    if (ts == AV_NOPTS_VALUE && !mkv->tracks[pkt->stream_index].write_dts) {
+        av_log(s, AV_LOG_WARNING, "Switching to DTS.\n");
+        mkv->tracks[pkt->stream_index].write_dts = 1;
+        ts = pkt->dts;
+    }
 
     if (ts == AV_NOPTS_VALUE) {
         av_log(s, AV_LOG_ERROR, "Can't write packet with unknown timestamp\n");
