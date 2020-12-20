@@ -1122,7 +1122,7 @@ static int mkv_write_dovi(AVFormatContext *s, AVIOContext *pb, AVStream *st)
         uint32_t type;
         int size;
 
-        if ((ret = ff_mov_put_dvcc_dvvc(buf, sizeof(buf), &type, dovi, s)) < 0)
+        if ((ret = ff_mov_put_dvcc_dvvc(s, buf, sizeof(buf), &type, dovi)) < 0)
             return ret;
 
         size = ret;
@@ -1396,6 +1396,9 @@ static int mkv_write_track(AVFormatContext *s, MatroskaMuxContext *mkv,
     }
 
     end_ebml_master(pb, track_master);
+
+    if ((ret = mkv_write_dovi(s, pb, st)) < 0)
+        return ret;
 
     return 0;
 }

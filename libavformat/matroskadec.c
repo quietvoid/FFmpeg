@@ -2276,16 +2276,15 @@ static int mkv_parse_video_projection(AVStream *st, const MatroskaTrack *track,
     return 0;
 }
 
-static int mkv_parse_dvcc_dvvc(AVStream *st, const MatroskaTrack *track,
-                               EbmlBin *bin, void *logctx)
+static int mkv_parse_dvcc_dvvc(AVFormatContext *s, AVStream *st, const MatroskaTrack *track,
+                               EbmlBin *bin)
 {
     GetBitContext gb;
     init_get_bits8(&gb, bin->data, bin->size);
-    return ff_mov_parse_dvcc_dvvc(st, &gb, logctx);
+    return ff_mov_parse_dvcc_dvvc(s, st, &gb);
 }
 
-static int mkv_parse_block_addition_mappings(AVStream *st, const MatroskaTrack *track,
-                                             void *logctx)
+static int mkv_parse_block_addition_mappings(AVFormatContext *s, AVStream *st, const MatroskaTrack *track)
 {
     int i, ret;
     const EbmlList *mappings_list = &track->block_addition_mappings;
@@ -2296,11 +2295,11 @@ static int mkv_parse_block_addition_mappings(AVStream *st, const MatroskaTrack *
         switch (mapping->type) {
         case MKBETAG('d','v','c','C'):
         case MKBETAG('d','v','v','C'):
-            if ((ret = mkv_parse_dvcc_dvvc(st, track, &mapping->extradata, logctx)) < 0)
+            if ((ret = mkv_parse_dvcc_dvvc(st, track, &mapping->extradata, s)) < 0)
                 return ret;
             break;
         default:
-            av_log(logctx, AV_LOG_DEBUG,
+            av_log(s, AV_LOG_DEBUG,
                    "Unknown block additional mapping type %i, value %i, name \"%s\"\n",
                    mapping->type, mapping->value, mapping->name ? mapping->name : "");
         }

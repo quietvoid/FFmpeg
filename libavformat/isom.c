@@ -665,7 +665,7 @@ void ff_mov_write_chan(AVIOContext *pb, int64_t channel_layout)
     avio_wb32(pb, 0);              // mNumberChannelDescriptions
 }
 
-int ff_mov_parse_dvcc_dvvc(AVStream *st, GetBitContext *gb, void *log_ctx)
+int ff_mov_parse_dvcc_dvvc(AVFormatContext *s, AVStream *st, GetBitContext *gb)
 {
     AVDOVIDecoderConfigurationRecord *dovi;
     size_t dovi_size;
@@ -701,7 +701,7 @@ int ff_mov_parse_dvcc_dvvc(AVStream *st, GetBitContext *gb, void *log_ctx)
         return ret;
     }
 
-    av_log(log_ctx, AV_LOG_TRACE, "DOVI in dvcC/dvvC box, version: %d.%d, profile: %d, level: %d, "
+    av_log(s, AV_LOG_TRACE, "DOVI in dvcC/dvvC box, version: %d.%d, profile: %d, level: %d, "
            "rpu flag: %d, el flag: %d, bl flag: %d, compatibility id: %d\n",
            dovi->dv_version_major, dovi->dv_version_minor,
            dovi->dv_profile, dovi->dv_level,
@@ -714,8 +714,8 @@ int ff_mov_parse_dvcc_dvvc(AVStream *st, GetBitContext *gb, void *log_ctx)
     return 0;
 }
 
-int ff_mov_put_dvcc_dvvc(uint8_t *out, int size, uint32_t *type,
-                         AVDOVIDecoderConfigurationRecord *dovi, void *log_ctx)
+int ff_mov_put_dvcc_dvvc(AVFormatContext *s, uint8_t *out, int size, uint32_t *type,
+                         AVDOVIDecoderConfigurationRecord *dovi)
 {
     PutBitContext pb;
     init_put_bits(&pb, out, size);
@@ -743,7 +743,7 @@ int ff_mov_put_dvcc_dvvc(uint8_t *out, int size, uint32_t *type,
     put_bits32(&pb, 0); /* reserved */
     flush_put_bits(&pb);
 
-    av_log(log_ctx, AV_LOG_DEBUG, "DOVI in %s box, version: %d.%d, profile: %d, level: %d, "
+    av_log(s, AV_LOG_DEBUG, "DOVI in %s box, version: %d.%d, profile: %d, level: %d, "
            "rpu flag: %d, el flag: %d, bl flag: %d, compatibility id: %d\n",
            dovi->dv_profile > 7 ? "dvvC" : "dvcC",
            dovi->dv_version_major, dovi->dv_version_minor,

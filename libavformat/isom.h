@@ -367,9 +367,9 @@ int ff_mov_read_stsd_entries(MOVContext *c, AVIOContext *pb, int entries);
 void ff_mov_write_chan(AVIOContext *pb, int64_t channel_layout);
 
 #define MOV_DVCC_DVVC_SIZE 24
-int ff_mov_parse_dvcc_dvvc(AVStream *st, GetBitContext *gb, void *log_ctx);
-int ff_mov_put_dvcc_dvvc(uint8_t *out, int size, uint32_t *type,
-                         AVDOVIDecoderConfigurationRecord *dovi, void *log_ctx);
+int ff_mov_parse_dvcc_dvvc(AVFormatContext *s, AVStream *st, GetBitContext *gb);
+int ff_mov_put_dvcc_dvvc(AVFormatContext *s, uint8_t *out, int size, uint32_t *type,
+                         AVDOVIDecoderConfigurationRecord *dovi);
 
 #define FF_MOV_FLAG_MFRA_AUTO -1
 #define FF_MOV_FLAG_MFRA_DTS 1
