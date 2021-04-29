@@ -2881,7 +2881,7 @@ static int matroska_parse_tracks(AVFormatContext *s)
             st->codecpar->codec_type = AVMEDIA_TYPE_SUBTITLE;
         }
 
-        ret = mkv_parse_block_addition_mappings(st, track, matroska->ctx);
+        ret = mkv_parse_block_addition_mappings(matroska->ctx, st, track);
         if (ret < 0)
             return ret;
     }
